@@ -5,12 +5,11 @@ __pycache__/
 
 # Dependencies
 vendor/
-node_modules/
+composer.lock
 
 # Logs and temp files
 *.log
 *.tmp
-*.swp
 
 # Environment
 .env
@@ -20,6 +19,10 @@ node_modules/
 # Editors
 .vscode/
 .idea/
+
+# OS specific
+.DS_Store
+Thumbs.db
 
 # WordPress specific
 wp-content/cache/
