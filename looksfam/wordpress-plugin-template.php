@@ -10,6 +10,16 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Define plugin version constant
+if (!defined('LOOKSFAM_VERSION')) {
+    define('LOOKSFAM_VERSION', '1.0.0');
+}
+
+// Autoload Core classes (Phase 4 - New Architecture)
+require_once 'includes/Core/Database.php';
+require_once 'includes/Core/Activator.php';
+require_once 'includes/Core/Deactivator.php';
+
 // Load plugin class files.
 require_once 'includes/class-wordpress-plugin-template.php';
 require_once 'includes/class-wordpress-plugin-template-settings.php';
@@ -1195,9 +1205,26 @@ function get_exam_statistics($exam_id = null) {
 }
 
 /**
- * Initialize table on plugin activation (optional)
+ * Plugin Activation Hook
+ * Uses new Database::create_tables() method instead of legacy function
  */
-register_activation_hook(__FILE__, 'create_exam_answers_table');
+register_activation_hook(__FILE__, ['Looksfam\Core\Activator', 'activate']);
+
+/**
+ * Plugin Deactivation Hook
+ */
+register_deactivation_hook(__FILE__, ['Looksfam\Core\Deactivator', 'deactivate']);
+
+/**
+ * Legacy table creation function - DEPRECATED
+ * Kept for backward compatibility only, will be removed in future versions
+ */
+function create_exam_answers_table() {
+    // Deprecated: Use Looksfam\Core\Database::create_tables() instead
+    _deprecated_function(__FUNCTION__, '1.0.1', 'Looksfam\Core\Database::create_tables');
+    \Looksfam\Core\Database::create_tables();
+}
+
 function add_fake_answers_admin_menu() {
     add_submenu_page(
         'tools.php',
