@@ -10,25 +10,38 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Define plugin version constant
+// Define plugin constants
 if (!defined('LOOKSFAM_VERSION')) {
     define('LOOKSFAM_VERSION', '1.0.0');
 }
 
+if (!defined('LOOKSFAM_PLUGIN_DIR')) {
+    define('LOOKSFAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
+}
+
+if (!defined('LOOKSFAM_PLUGIN_URL')) {
+    define('LOOKSFAM_PLUGIN_URL', plugin_dir_url(__FILE__));
+}
+
 // Autoload Core classes (Phase 4 - New Architecture)
-require_once 'includes/Core/Database.php';
-require_once 'includes/Core/Activator.php';
-require_once 'includes/Core/Deactivator.php';
+require_once LOOKSFAM_PLUGIN_DIR . 'includes/Core/Database.php';
+require_once LOOKSFAM_PLUGIN_DIR . 'includes/Core/Activator.php';
+require_once LOOKSFAM_PLUGIN_DIR . 'includes/Core/Deactivator.php';
 
 // Load NEW Admin Classes (Custom Table Based)
-require_once 'includes/Admin/ExamAdmin.php';
-require_once 'includes/Admin/QuestionAdmin.php';
+require_once LOOKSFAM_PLUGIN_DIR . 'includes/Admin/ExamAdmin.php';
+require_once LOOKSFAM_PLUGIN_DIR . 'includes/Admin/QuestionAdmin.php';
 
 // Load NEW Frontend Classes
-require_once 'includes/Frontend/ExamDisplay.php';
+require_once LOOKSFAM_PLUGIN_DIR . 'includes/Frontend/ExamDisplay.php';
+
+// Instantiate new architecture classes
+new Looksfam\Admin\ExamAdmin();
+new Looksfam\Admin\QuestionAdmin();
+new Looksfam\Frontend\ExamDisplay();
 
 // Load Legacy Compatibility Layer (Write Interceptors & Lazy Migration)
-require_once 'includes/Legacy/write-interceptors.php';
+require_once LOOKSFAM_PLUGIN_DIR . 'includes/Legacy/write-interceptors.php';
 
 // Load remaining non-conflicting legacy files ONLY if they don't use post meta for core data
 // Note: Core admin/display logic is now handled by new classes above
