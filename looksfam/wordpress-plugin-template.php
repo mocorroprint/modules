@@ -20,31 +20,37 @@ require_once 'includes/Core/Database.php';
 require_once 'includes/Core/Activator.php';
 require_once 'includes/Core/Deactivator.php';
 
-// Load plugin class files.
-require_once 'includes/class-wordpress-plugin-template.php';
-require_once 'includes/class-wordpress-plugin-template-settings.php';
+// Load NEW Admin Classes (Custom Table Based)
+require_once 'includes/Admin/ExamAdmin.php';
+require_once 'includes/Admin/QuestionAdmin.php';
 
-// Load plugin libraries.
-require_once 'includes/lib/class-wordpress-plugin-template-admin-api.php';
-require_once 'includes/lib/class-wordpress-plugin-template-post-type.php';
-require_once 'includes/lib/class-wordpress-plugin-template-taxonomy.php';
+// Load NEW Frontend Classes
+require_once 'includes/Frontend/ExamDisplay.php';
 
-require_once 'includes/class-seo.php';
-require_once 'includes/class-payment.php';
+// Load Legacy Compatibility Layer (Write Interceptors & Lazy Migration)
+require_once 'includes/Legacy/write-interceptors.php';
 
-require_once 'includes/class-post.php';
-require_once 'includes/class-admin-class.php';
-require_once 'includes/class-admin-exam.php';
-require_once 'includes/class-admin-enroll.php';
-require_once 'includes/class-admin-question.php';
-
-require_once 'includes/class-display-activity.php'; 
-require_once 'includes/class-display-confirmation.php'; 
-require_once 'includes/class-display-exam.php'; 
-require_once 'includes/class-display-exercise.php'; 
-require_once 'includes/class-display-review.php'; 
-require_once 'includes/class-display-user.php'; 
-require_once 'includes/class-display-functions.php'; 
+// Load remaining non-conflicting legacy files ONLY if they don't use post meta for core data
+// Note: Core admin/display logic is now handled by new classes above
+// These are kept temporarily for edge cases but should be refactored next
+if (file_exists('includes/class-seo.php')) {
+    require_once 'includes/class-seo.php';
+}
+if (file_exists('includes/class-wordpress-plugin-template.php')) {
+    require_once 'includes/class-wordpress-plugin-template.php';
+}
+if (file_exists('includes/class-wordpress-plugin-template-settings.php')) {
+    require_once 'includes/class-wordpress-plugin-template-settings.php';
+}
+if (file_exists('includes/lib/class-wordpress-plugin-template-admin-api.php')) {
+    require_once 'includes/lib/class-wordpress-plugin-template-admin-api.php';
+}
+if (file_exists('includes/lib/class-wordpress-plugin-template-post-type.php')) {
+    require_once 'includes/lib/class-wordpress-plugin-template-post-type.php';
+}
+if (file_exists('includes/lib/class-wordpress-plugin-template-taxonomy.php')) {
+    require_once 'includes/lib/class-wordpress-plugin-template-taxonomy.php';
+} 
 
 
 /**
@@ -1219,7 +1225,7 @@ register_deactivation_hook(__FILE__, ['Looksfam\Core\Deactivator', 'deactivate']
  * Legacy table creation function - DEPRECATED
  * Kept for backward compatibility only, will be removed in future versions
  */
-function create_exam_answers_table() {
+function create_exam_answers_table_legacy() {
     // Deprecated: Use Looksfam\Core\Database::create_tables() instead
     _deprecated_function(__FUNCTION__, '1.0.1', 'Looksfam\Core\Database::create_tables');
     \Looksfam\Core\Database::create_tables();
