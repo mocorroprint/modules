@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 use Looksfam\Core\Database;
 
 // Initialize Database instance
-$db = Database::instance();
+$db = new Database();
 
 /**
  * Intercept Exam Saves
@@ -28,7 +28,7 @@ function looksfam_intercept_exam_save($post_id, $post) {
     if (!current_user_can('edit_post', $post_id)) return;
     if (wp_is_post_revision($post_id)) return;
     
-    $db = Looksfam\Core\Database::instance();
+    $db = new Database();
     
     // Collect data from POST (legacy form fields)
     $time_limit = isset($_POST['exam_time_limit']) ? intval($_POST['exam_time_limit']) : 0;
@@ -68,7 +68,7 @@ function looksfam_intercept_question_save($post_id, $post) {
     if (!current_user_can('edit_post', $post_id)) return;
     if (wp_is_post_revision($post_id)) return;
     
-    $db = Looksfam\Core\Database::instance();
+    $db = new Database();
     
     $options = isset($_POST['multiple_choice_options']) ? $_POST['multiple_choice_options'] : [];
     $correct = isset($_POST['correct_answer']) ? $_POST['correct_answer'] : '';
@@ -111,7 +111,7 @@ function looksfam_intercept_class_save($post_id, $post) {
     if (!current_user_can('edit_post', $post_id)) return;
     if (wp_is_post_revision($post_id)) return;
     
-    $db = Looksfam\Core\Database::instance();
+    $db = new Database();
     
     $subject = isset($_POST['exam_subject']) ? intval($_POST['exam_subject']) : 0;
     $topic = isset($_POST['exam_topic']) ? intval($_POST['exam_topic']) : 0;
@@ -168,7 +168,7 @@ function looksfam_intercept_transaction_creation() {
     if (isset($_POST['looksfam_create_transaction'])) {
         check_admin_referer('looksfam_transaction_nonce');
         
-        $db = Looksfam\Core\Database::instance();
+        $db = new Database();
         
         $data = [
             'user_id' => intval($_POST['user_id']),
